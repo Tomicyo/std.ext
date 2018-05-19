@@ -1,6 +1,8 @@
 #include <ext/win32.hpp>
 
 #include <Windows.h>
+#include <Shlwapi.h>
+#pragma comment(lib,"Shlwapi.lib")
 
 namespace std {
     namespace win32 {
@@ -28,6 +30,10 @@ namespace std {
                 RegCloseKey((HKEY)m_key);
             }
         }
+        bool registry::is_valid() const
+        {
+            return m_isvalid;
+        }
         bool registry::get_value(const char * key, string & val)
         {
             if(!m_isvalid)
@@ -38,6 +44,15 @@ namespace std {
                 return false;
             val.resize(length + 1, '\0');
             return RegQueryValueExA((HKEY)m_key, key, NULL, NULL, (LPBYTE)val.data(), &length) == ERROR_SUCCESS;
+        }
+        string _path_combine(const string& p0, const string& p1)
+        {
+            char pathbuffer[1024] = { 0 };
+            auto ret = PathCombineA(pathbuffer, p0.c_str(), p1.c_str());
+            return ret ? ret : "";
+        }
+        bool _path_exist(const string& p) {
+            return PathFileExistsA(p.c_str()) == TRUE;
         }
     }
 }
