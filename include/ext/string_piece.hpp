@@ -19,7 +19,7 @@ namespace std
 			constexpr base_string_piece() : m_ptr(nullptr), m_length(0) {}
 			constexpr base_string_piece(const value_type* str) : m_ptr(str), m_length(char_traits<value_type>::length(str)) {}
 			constexpr base_string_piece(const value_type* offset, size_type len) : m_ptr(offset), m_length(len) {}
-			base_string_piece(const typename T::const_iterator& begin, const typename T::const_iterator& end)
+			base_string_piece(const_iterator begin, const_iterator end)
 			{
 				m_length = distance(begin, end);
 				m_ptr = m_length > 0 ? &*begin : nullptr;
@@ -32,6 +32,9 @@ namespace std
 
 			const_iterator begin() const { return m_ptr; }
 			const_iterator end() const { return m_ptr + m_length; }
+
+			const value_type operator[](size_type index) const { return m_ptr[index]; }
+			value_type& operator[](size_type index) { return m_ptr[index]; }
 
 			T to_string() const { return is_null() ? T() : T(data(), size()); }
 			explicit operator T() const { return to_string(); }
