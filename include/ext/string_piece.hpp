@@ -45,6 +45,8 @@ namespace std
 		};
 
 		typedef base_string_piece<string> string_piece;
+
+		bool operator==(const string_piece& x, const string_piece& y);
 	}
 }
 
