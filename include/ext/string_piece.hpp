@@ -34,10 +34,19 @@ namespace std
 			const_iterator end() const { return m_ptr + m_length; }
 
 			const value_type operator[](size_type index) const { return m_ptr[index]; }
-			value_type& operator[](size_type index) { return m_ptr[index]; }
+			const value_type& operator[](size_type index) { return m_ptr[index]; }
 
 			T to_string() const { return is_null() ? T() : T(data(), size()); }
 			explicit operator T() const { return to_string(); }
+
+            bool operator==(base_string_piece const& rhs)
+            {
+                if (m_length != rhs.m_length)
+                    return false;
+                if (m_ptr == rhs.m_ptr)
+                    return true;
+                return !char_traits<value_type>::compare(m_ptr, rhs.m_ptr, m_length * sizeof(value_type));
+            }
 
 		private:
 			const value_type* m_ptr;
@@ -46,7 +55,6 @@ namespace std
 
 		typedef base_string_piece<string> string_piece;
 
-		bool operator==(const string_piece& x, const string_piece& y);
 	}
 }
 
